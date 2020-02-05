@@ -1,0 +1,5 @@
+ERROR    [INIT] : strict naming prevents implicit creation of powerflow::solver_ml_config
+../test_files/test_IEEE_13_NR.glm(50): invalid module powerflow property 'solver_ml_config'
+../test_files/test_IEEE_13_NR.glm(50): expected module powerflow block closing }
+../test_files/test_IEEE_13_NR.glm(9): load failed at or near 'module power...'
+FATAL    [INIT] : shutdown after command line rejected
