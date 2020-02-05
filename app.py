@@ -5,7 +5,6 @@ import sys
 import getopt
 import shutil
 import glob
-import boto3
 from flask import Flask, flash, request, redirect, render_template, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 
