@@ -20,7 +20,7 @@ class TestJson2Glm(unittest.TestCase):
         result = json2glm.objects_glm()
         self.assertTrue(result)
 
-    
+
 
 if __name__ == '__main__':
     unittest.main()
