@@ -4,12 +4,12 @@ import sys
 import getopt
 import glob
 
-jsonfile = glob.glob('./uploads/*.json')
-filename_json = jsonfile[0]
-filename_glm = filename_json.replace("json", "glm")
+file_in = glob.glob('./uploads/*.json')
+filename_in = file_in[0]
+filename_out = filename_in.replace("json", "glm")
 
-if os.path.exists(filename_glm):
-	os.remove(filename_glm)
+if os.path.exists(filename_out):
+	os.remove(filename_out)
 data = {}
 objects_ignore = ["id", "class", "rank", "clock", "schedule_skew", \
 "rng_state", "heartbeat", "guid", "flags"]
@@ -17,14 +17,14 @@ globals_ignore = ['clock', 'timezone_locale', 'starttime', 'stoptime', 'glm_save
 # REMOVE glm_save_options when bug is fixed
 classkeys_ignore = ['object_size', 'trl', 'profiler.numobjs', 'profiler.clocks', 'profiler.count', 'parent']
 
-with open(filename_json, 'r') as fr:
+with open(filename_in, 'r') as fr:
 	data = json.load(fr)
 	assert(data['application'] == 'gridlabd')
 	assert(data['version'] >= '4.0.0')
 	# print(data['classes'].keys())
 
 
-with open(filename_glm, "a") as fw:
+with open(filename_out, "a") as fw:
 	fw.write("// JSON to GLM Converter Output")
 
 
@@ -36,7 +36,7 @@ def clock_glm():
 	start_str = '\n' + '\t' + 'starttime' + ' \"' + data['globals']['starttime']['value'] + '\";'
 	stop_str = '\n' + '\t' + 'stoptime' + ' \"' + data['globals']['stoptime']['value'] + '\";'
 	end_str = '\n' + '}'
-	with open(filename_glm, "a") as fw:
+	with open(filename_out, "a") as fw:
 		fw.write('\n // CLOCK')
 		fw.write(header_str)
 		fw.write(tmzone_str)
@@ -50,7 +50,7 @@ def classes_glm():
 	global data
 	global fw
 
-	with open(filename_glm, "a") as fw:
+	with open(filename_out, "a") as fw:
 		fw.write('\n // CLASSES')
 		for p_id, p_info in data['classes'].items():
 			header_str = ''
@@ -68,7 +68,7 @@ def classes_glm():
 def globals_glm():
 	global data
 	global fw
-	with open(filename_glm, "a") as fw:
+	with open(filename_out, "a") as fw:
 		fw.write('\n // GLOBALS')
 		for p_id, p_info in data['globals'].items():
 			if p_info['access'] == "PUBLIC" and p_info['value'] and 'infourl' not in p_id and "::" not in p_id:
@@ -96,7 +96,7 @@ def modules_glm():
 	global data
 	global fw
 
-	with open(filename_glm, "a") as fw:
+	with open(filename_out, "a") as fw:
 		fw.write('\n // MODULES')
 		for p_id, p_info in data['modules'].items():
 			tmp_str = '\n' + 'module ' + p_id + '{'
@@ -114,7 +114,7 @@ def objects_glm():
 	global data
 	global fw
 	obj_id = []
-	with open(filename_glm, "a") as fw:
+	with open(filename_out, "a") as fw:
 		fw.write('\n // OBJECTS')
 		for p_id, p_info in data['objects'].items():
 			obj_id.append([int(p_info['id']),p_id])
@@ -143,7 +143,7 @@ def objects_glm():
 def schedules_glm():
 	global data
 	global fw
-	with open(filename_glm, "a") as fw:
+	with open(filename_out, "a") as fw:
 		fw.write('\n // SCHEDULES')
 		for p_id, p_info in data['schedules'].items():
 			header_str = '\n' + 'schedule ' + p_id + '{'

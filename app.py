@@ -8,8 +8,6 @@ import glob
 from flask import Flask, flash, request, redirect, render_template, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 
-# ALLOWED_EXTENSIONS = set(['json'])
-
 app = Flask(__name__)
 app.config.from_object("settings.config.DevelopmentConfig")
 
@@ -44,7 +42,11 @@ def upload_file():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        os.system('python ./' + convert_from + '2' + convert_to + '.py')
+        file_in = glob.glob('./uploads/*.json')
+        if (convert_from == "json" and convert_to == "png"):
+            os.system('python ./converters/' + convert_from + '2' + convert_to + '.py -i ' + file_in[0])
+        else:
+            os.system('python ./converters/' + convert_from + '2' + convert_to + '.py')
         output_file = glob.glob('./uploads/*.' + convert_to)
         output_file = output_file[0].split("/")[-1:][0]
         return redirect(url_for('download', filename = output_file))
