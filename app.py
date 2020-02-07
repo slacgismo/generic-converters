@@ -8,8 +8,6 @@ import glob
 from flask import Flask, flash, request, redirect, render_template, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 
-# ALLOWED_EXTENSIONS = set(['json'])
-
 app = Flask(__name__)
 app.config.from_object("settings.config.DevelopmentConfig")
 
