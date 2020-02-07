@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<h2>Select a file to convert</h2>
+
+<div class="jumbotron text-center">
+
+	<form method="post" action="/" enctype="multipart/form-data">
+	    <dl>
+			<div class="custom-file form-group">
+			  <input type="file" class="custom-file-input" id="customFile" name="file" autocomplete="off" required>
+			  <label class="custom-file-label" for="customFile">Choose file</label>
+			</div>
+
+			<div class="form-group">
+				<select class="custom-select" name="convertFrom">
+				  <option value="" disabled selected hidden>Convert From</option>
+				  <option value="json">JSON</option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<select class="custom-select" name="convertTo">
+				  <option value="" disabled selected hidden>Convert To</option>
+				  <option value="glm">GLM</option>
+				  <option value="txt">TXT</option>
+				</select>
+			</div>
+			<div class="invalid-feedback">Example invalid custom select feedback</div>
+	    </dl>
+	    <p>
+			<input class="btn btn-primary" type="submit" id="convert-btn" value="Submit & Download">
+		</p>
+	</form>
+	<p>
+		{% with messages = get_flashed_messages() %}
+		  {% if messages %}
+			<ul class=flashes>
+			{% for message in messages %}
+			  <li>{{ message }}</li>
+			{% endfor %}
+			</ul>
+		  {% endif %}
+		{% endwith %}
+	</p>
+</div>
+
+
+<p> {{ filename }}
+<div id="output"></div>
+{% endblock %}
