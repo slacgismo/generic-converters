@@ -5,7 +5,7 @@ A generic file converter web application
 
 ## Creating the env - ensure you are running the anaconda `4.5.x +`
 ```
-conda env create -f generic_converters_env.yml
+conda env create -f environment.yml
 ```
 
 ## Updating the env after adding new packages
