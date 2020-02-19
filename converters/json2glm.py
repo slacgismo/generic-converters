@@ -4,33 +4,8 @@ import sys
 import getopt
 import glob
 
-file_in = glob.glob('./uploads/*.json')
-filename_in = file_in[0]
-filename_out = filename_in.replace("json", "glm")
 
-if os.path.exists(filename_out):
-	os.remove(filename_out)
-data = {}
-objects_ignore = ["id", "class", "rank", "clock", "schedule_skew", \
-"rng_state", "heartbeat", "guid", "flags"]
-globals_ignore = ['clock', 'timezone_locale', 'starttime', 'stoptime', 'glm_save_options']
-# REMOVE glm_save_options when bug is fixed
-classkeys_ignore = ['object_size', 'trl', 'profiler.numobjs', 'profiler.clocks', 'profiler.count', 'parent']
-
-with open(filename_in, 'r') as fr:
-	data = json.load(fr)
-	assert(data['application'] == 'gridlabd')
-	assert(data['version'] >= '4.0.0')
-	# print(data['classes'].keys())
-
-
-with open(filename_out, "a") as fw:
-	fw.write("// JSON to GLM Converter Output")
-
-
-def clock_glm():
-	global data
-	global fw
+def clock_glm(data, filename_out):
 	header_str = '\n' + 'clock {'
 	tmzone_str = '\n' + '\t' + 'timezone ' + data['globals']['timezone_locale']['value'] + ';'
 	start_str = '\n' + '\t' + 'starttime' + ' \"' + data['globals']['starttime']['value'] + '\";'
@@ -43,13 +18,10 @@ def clock_glm():
 		fw.write(start_str)
 		fw.write(stop_str)
 		fw.write(end_str)
-	return True
+	return data, filename_out
 
 
-def classes_glm():
-	global data
-	global fw
-
+def classes_glm(data, filename_out):
 	with open(filename_out, "a") as fw:
 		fw.write('\n // CLASSES')
 		for p_id, p_info in data['classes'].items():
@@ -63,11 +35,10 @@ def classes_glm():
 				fw.write(header_str)
 				fw.write(val_str)
 				fw.write("\n}")
-	return True
+	return data, filename_out
 
-def globals_glm():
-	global data
-	global fw
+
+def globals_glm(data, filename_out):
 	with open(filename_out, "a") as fw:
 		fw.write('\n // GLOBALS')
 		for p_id, p_info in data['globals'].items():
@@ -89,13 +60,10 @@ def globals_glm():
 			else:
 				val_str = '\n' + '// ' + p_id + ' is set to ' + p_info['value']
 				fw.write(val_str)
-	return True
+	return data, filename_out
 
 
-def modules_glm():
-	global data
-	global fw
-
+def modules_glm(data, filename_out):
 	with open(filename_out, "a") as fw:
 		fw.write('\n // MODULES')
 		for p_id, p_info in data['modules'].items():
@@ -107,12 +75,10 @@ def modules_glm():
 					val_str = '\n\t' + mod_var[1] + ' ' + f_info['value'] + ';'
 					fw.write(val_str)
 			fw.write('\n}')
+	return data, filename_out
 
-# def classes_glm P:
-# 	return True
-def objects_glm():
-	global data
-	global fw
+
+def objects_glm(data, filename_out):
 	obj_id = []
 	with open(filename_out, "a") as fw:
 		fw.write('\n // OBJECTS')
@@ -120,29 +86,30 @@ def objects_glm():
 			obj_id.append([int(p_info['id']),p_id])
 			obj_id_sorted = sorted(obj_id, key=lambda tup: tup[0])
 			id_list,ordered_obj_list= zip(*obj_id_sorted)
-		for obj_id_sorted in ordered_obj_list:
-			header_str = '\n' + 'object ' + data['objects'][obj_id_sorted]["class"] + '{'
-			fw.write(header_str)
-			if ':' in obj_id_sorted:
-				new_name = data['objects'][obj_id_sorted]['class']+'_'+data['objects'][obj_id_sorted]['id']
-			else:
-				new_name = obj_id_sorted
-			name_str = '\n' + '\t' + "name \"" + new_name + '\";'
-			fw.write(name_str)
-			for v_id, v_info in data['objects'][obj_id_sorted].items():
-				if v_id not in objects_ignore and v_info:
-					if "\n" in v_info:
-						val_str = "\n"+ "\t" + v_id+ " " + '\"\"\"' + v_info.replace('"', '\\\"') + '\"\"\";'
-					else:
-						val_str = "\n"+"\t" + v_id + " " + "\"" + v_info.replace('"', '\\\"') + "\";"
-					fw.write(val_str)
-			fw.write('\n}' )
-	return True
+		try:
+			for obj_id_sorted in ordered_obj_list:
+				header_str = '\n' + 'object ' + data['objects'][obj_id_sorted]["class"] + '{'
+				fw.write(header_str)
+				if ':' in obj_id_sorted:
+					new_name = data['objects'][obj_id_sorted]['class']+'_'+data['objects'][obj_id_sorted]['id']
+				else:
+					new_name = obj_id_sorted
+				name_str = '\n' + '\t' + "name \"" + new_name + '\";'
+				fw.write(name_str)
+				for v_id, v_info in data['objects'][obj_id_sorted].items():
+					if v_id not in objects_ignore and v_info:
+						if "\n" in v_info:
+							val_str = "\n"+ "\t" + v_id+ " " + '\"\"\"' + v_info.replace('"', '\\\"') + '\"\"\";'
+						else:
+							val_str = "\n"+"\t" + v_id + " " + "\"" + v_info.replace('"', '\\\"') + "\";"
+						fw.write(val_str)
+				fw.write('\n}' )
+		except NameError:
+			return data, filename_out
+	return data, filename_out
 
 
-def schedules_glm():
-	global data
-	global fw
+def schedules_glm(data, filename_out):
 	with open(filename_out, "a") as fw:
 		fw.write('\n // SCHEDULES')
 		for p_id, p_info in data['schedules'].items():
@@ -150,14 +117,40 @@ def schedules_glm():
 			fw.write(header_str)
 			fw.write(p_info)
 			fw.write('\n}')
+	return data, filename_out
 
-clock_glm()
 
-modules_glm()
-globals_glm()
-classes_glm()
+def json2glm():
+	file_in = glob.glob('./uploads/*.json')
+	filename_in = file_in[0]
+	filename_out = filename_in.replace("json", "glm")
 
-schedules_glm()
-objects_glm()
+	if os.path.exists(filename_out):
+		os.remove(filename_out)
+	data = {}
+	objects_ignore = ["id", "class", "rank", "clock", "schedule_skew", \
+	"rng_state", "heartbeat", "guid", "flags"]
+	globals_ignore = ['clock', 'timezone_locale', 'starttime', 'stoptime', 'glm_save_options']
+	# REMOVE glm_save_options when bug is fixed
+	classkeys_ignore = ['object_size', 'trl', 'profiler.numobjs', 'profiler.clocks', 'profiler.count', 'parent']
 
-fw.close()
+	with open(filename_in, 'r') as fr:
+		data = json.load(fr)
+		assert(data['application'] == 'gridlabd')
+		assert(data['version'] >= '4.0.0')
+		# print(data['classes'].keys())
+
+
+	with open(filename_out, "a") as fw:
+		fw.write("// JSON to GLM Converter Output")
+	data, filename_out = clock_glm(data, filename_out)
+	data, filename_out = modules_glm(data, filename_out)
+	data, filename_out = globals_glm(data, filename_out)
+	data, filename_out = classes_glm(data, filename_out)
+
+	data, filename_out = schedules_glm(data, filename_out)
+	data, filename_out = objects_glm(data, filename_out)
+	print("hey")
+	print(data)
+
+	fw.close()

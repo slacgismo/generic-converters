@@ -10,7 +10,7 @@ conda env create -f generic_converters_env.yml
 
 ## Updating the env after adding new packages
 ```
-conda env update -f generic_converters_env.yml
+conda env update -f environment.yml
 ```
 
 ## Starting the env
