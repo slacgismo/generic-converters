@@ -120,8 +120,7 @@ def schedules_glm(data, filename_out):
 	return data, filename_out
 
 
-def json2glm():
-	file_in = glob.glob('./uploads/*.json')
+def json2glm(file_in):
 	filename_in = file_in[0]
 	filename_out = filename_in.replace("json", "glm")
 
@@ -131,14 +130,12 @@ def json2glm():
 	objects_ignore = ["id", "class", "rank", "clock", "schedule_skew", \
 	"rng_state", "heartbeat", "guid", "flags"]
 	globals_ignore = ['clock', 'timezone_locale', 'starttime', 'stoptime', 'glm_save_options']
-	# REMOVE glm_save_options when bug is fixed
 	classkeys_ignore = ['object_size', 'trl', 'profiler.numobjs', 'profiler.clocks', 'profiler.count', 'parent']
 
 	with open(filename_in, 'r') as fr:
 		data = json.load(fr)
 		assert(data['application'] == 'gridlabd')
 		assert(data['version'] >= '4.0.0')
-		# print(data['classes'].keys())
 
 
 	with open(filename_out, "a") as fw:
@@ -150,7 +147,5 @@ def json2glm():
 
 	data, filename_out = schedules_glm(data, filename_out)
 	data, filename_out = objects_glm(data, filename_out)
-	print("hey")
-	print(data)
 
 	fw.close()

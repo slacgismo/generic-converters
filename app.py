@@ -8,6 +8,7 @@ import glob
 from flask import Flask, flash, request, redirect, render_template, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 from converters.json2glm import json2glm
+from converters.json2png import json2png
 
 app = Flask(__name__)
 app.config.from_object("settings.config.DevelopmentConfig")
@@ -44,12 +45,22 @@ def upload_file():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         file_in = glob.glob('./uploads/*.json')
-        if (convert_from == "json" and convert_to == "png"):
-            os.system('python ./converters/' + convert_from + '2' + convert_to + '.py -i ' + file_in[0])
-        else:
-            json2glm()
+
+        supported_from_to_conversions = {
+            "json" : {
+                "png": 1 | True,
+                "glm": 1 | True,
+            },
+        }
+        try:
+            if(supported_from_to_conversions[convert_from][convert_to]):
+                eval(convert_from + '2' + convert_to)(file_in)
+        except KeyError:
+            print(f"{convert_from} or {convert_to} is wrong")
+
         output_file = glob.glob('./uploads/*.' + convert_to)
         output_file = output_file[0].split("/")[-1:][0]
+        
         return redirect(url_for('download', filename = output_file))
     else:
         flash('Allowed file types are json')
