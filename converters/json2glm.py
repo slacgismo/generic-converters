@@ -140,8 +140,6 @@ def json2glm(file_in):
 	with open(filename_out, "a") as fw:
 		fw.write("// JSON to GLM Converter Output")
 
-	print("what")
-	print(data)
 	clock_glm(data, filename_out)
 	modules_glm(data, filename_out)
 	globals_glm(data, filename_out)
