@@ -1,37 +1,36 @@
 import unittest
 from unittest.mock import Mock
 from unittest.mock import patch
-import converters.json2glm
-import converters.json2png
+import json
+from converters.json2glm import *
+from converters.json2png import *
 
 
 class TestJson2Glm(unittest.TestCase):
 
     def test_clock_glm(self):
-        result = json2glm.clock_glm()
+        with open("./test_files/test.json", 'r') as fr:
+            data = json.load(fr)
+        result = clock_glm(data, "test.glm")
         self.assertTrue(result)
 
     def test_classes_glm(self):
-        result = json2glm.classes_glm()
+        with open("./test_files/test.json", 'r') as fr:
+            data = json.load(fr)
+        result = classes_glm(data, "test.glm")
         self.assertTrue(result)
 
     def test_globals_glm(self):
-        result = json2glm.globals_glm()
+        with open("./test_files/test.json", 'r') as fr:
+            data = json.load(fr)
+        result = globals_glm(data, "test.glm")
         self.assertTrue(result)
 
     def test_objects_glm(self):
-        result = json2glm.objects_glm()
+        with open("./test_files/test.json", 'r') as fr:
+            data = json.load(fr)
+        result = objects_glm(data, "test.glm")
         self.assertTrue(result)
-
-    def test_json2glm(self):
-        result = json2glm.json2glm()
-
-
-class TestJson2Png(unittest.TestCase):
-
-    def test_json2png(self):
-        result = json2glm.json2glm()
-
 
 
 if __name__ == '__main__':

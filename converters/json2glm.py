@@ -18,7 +18,7 @@ def clock_glm(data, filename_out):
 		fw.write(start_str)
 		fw.write(stop_str)
 		fw.write(end_str)
-	return data, filename_out
+	return True
 
 
 def classes_glm(data, filename_out):
@@ -35,7 +35,7 @@ def classes_glm(data, filename_out):
 				fw.write(header_str)
 				fw.write(val_str)
 				fw.write("\n}")
-	return data, filename_out
+	return True
 
 
 def globals_glm(data, filename_out):
@@ -60,7 +60,7 @@ def globals_glm(data, filename_out):
 			else:
 				val_str = '\n' + '// ' + p_id + ' is set to ' + p_info['value']
 				fw.write(val_str)
-	return data, filename_out
+	return True
 
 
 def modules_glm(data, filename_out):
@@ -75,7 +75,7 @@ def modules_glm(data, filename_out):
 					val_str = '\n\t' + mod_var[1] + ' ' + f_info['value'] + ';'
 					fw.write(val_str)
 			fw.write('\n}')
-	return data, filename_out
+	return True
 
 
 def objects_glm(data, filename_out):
@@ -103,10 +103,10 @@ def objects_glm(data, filename_out):
 						else:
 							val_str = "\n"+"\t" + v_id + " " + "\"" + v_info.replace('"', '\\\"') + "\";"
 						fw.write(val_str)
-				fw.write('\n}' )
+				fw.write('\n}')
 		except NameError:
-			return data, filename_out
-	return data, filename_out
+			return True
+	return True
 
 
 def schedules_glm(data, filename_out):
@@ -117,7 +117,7 @@ def schedules_glm(data, filename_out):
 			fw.write(header_str)
 			fw.write(p_info)
 			fw.write('\n}')
-	return data, filename_out
+	return True
 
 
 def json2glm(file_in):
@@ -137,15 +137,17 @@ def json2glm(file_in):
 		assert(data['application'] == 'gridlabd')
 		assert(data['version'] >= '4.0.0')
 
-
 	with open(filename_out, "a") as fw:
 		fw.write("// JSON to GLM Converter Output")
-	data, filename_out = clock_glm(data, filename_out)
-	data, filename_out = modules_glm(data, filename_out)
-	data, filename_out = globals_glm(data, filename_out)
-	data, filename_out = classes_glm(data, filename_out)
 
-	data, filename_out = schedules_glm(data, filename_out)
-	data, filename_out = objects_glm(data, filename_out)
+	print("what")
+	print(data)
+	clock_glm(data, filename_out)
+	modules_glm(data, filename_out)
+	globals_glm(data, filename_out)
+	classes_glm(data, filename_out)
+
+	schedules_glm(data, filename_out)
+	objects_glm(data, filename_out)
 
 	fw.close()

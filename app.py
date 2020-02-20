@@ -13,18 +13,22 @@ from converters.json2png import json2png
 app = Flask(__name__)
 app.config.from_object("settings.config.DevelopmentConfig")
 
+
 def allowed_file(filename):
     name, extension = os.path.splitext(filename)
     extension = extension[1:].lower()
     return extension in app.config['ALLOWED_EXTENSIONS']
 
+
 @app.route('/')
 def index():
     return render_template('home.html')
 
+
 @app.route('/convert')
 def upload_form():
     return render_template('convert.html')
+
 
 @app.route('/', methods=['POST'])
 def upload_file():
@@ -47,24 +51,24 @@ def upload_file():
         file_in = glob.glob('./uploads/*.json')
 
         supported_from_to_conversions = {
-            "json" : {
-                "png": 1 | True,
-                "glm": 1 | True,
+            "json": {
+                "png": json2png(file_in),
+                "glm": json2glm(file_in),
             },
         }
         try:
-            if(supported_from_to_conversions[convert_from][convert_to]):
-                eval(convert_from + '2' + convert_to)(file_in)
+            supported_from_to_conversions[convert_from][convert_to]
         except KeyError:
-            print(f"{convert_from} or {convert_to} is wrong")
+            print(f"{convert_from} to {convert_to} is not implemented")
 
         output_file = glob.glob('./uploads/*.' + convert_to)
         output_file = output_file[0].split("/")[-1:][0]
-        
-        return redirect(url_for('download', filename = output_file))
+
+        return redirect(url_for('download', filename=output_file))
     else:
         flash('Allowed file types are json')
         return redirect('/convert')
+
 
 @app.route('/convert/<path:filename>', methods=['GET', 'POST'])
 def download(filename):

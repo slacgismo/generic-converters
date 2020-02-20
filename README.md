@@ -32,3 +32,8 @@ python app.py
 Run the converter by selecting any of the files from test_files folder.
 Select any of the dropdown options.
 Hit submit and download button.
+
+## UnitTesting
+```
+python tests.py
+```
