@@ -64,7 +64,7 @@ from PIL import Image, ImageDraw, ImageFont
 # 	else:
 # 		raise Exception("'%s' is an invalid command line option" % opt)
 
-def json2png(file_in):
+def json2png(file_in, size, output_type, resolution, limit, with_nodes):
 
 	filename_json = file_in[0]
 	output_type = 'summary'

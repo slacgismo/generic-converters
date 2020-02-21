@@ -34,6 +34,13 @@ def upload_form():
 def upload_file():
     convert_from = request.form["convertFrom"]
     convert_to = request.form["convertTo"]
+    if (convert_from == "json" and convert_to == "png"):
+        # json2png options
+        size = request.form["size"]
+        output_type = request.form["outputType"]
+        resolution = request.form["resolution"]
+        limit = request.form["limit"]
+        with_nodes = request.form["withNodes"]
     upload_files = glob.glob('./uploads/*')
     for f in upload_files:
         os.remove(f)
@@ -49,10 +56,9 @@ def upload_file():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         file_in = glob.glob('./uploads/*.json')
-
         supported_from_to_conversions = {
             "json": {
-                "png": json2png(file_in),
+                "png": json2png(file_in, size, output_type, resolution, limit, with_nodes),
                 "glm": json2glm(file_in),
             },
         }
