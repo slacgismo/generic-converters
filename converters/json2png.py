@@ -70,11 +70,6 @@ def json2png(file_in, size, output_type, resolution, limit, with_nodes):
 	output_type = 'summary'
 	filename_png = filename_json.replace("json", "png")
 	basename = ''
-	output_type = 'summary'
-	with_nodes = False
-	resolution = "300"
-	size = "300x200"
-	limit = None
 
 	with open(filename_json,"r") as f :
 		data = json.load(f)

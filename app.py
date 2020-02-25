@@ -34,13 +34,24 @@ def upload_form():
 def upload_file():
     convert_from = request.form["convertFrom"]
     convert_to = request.form["convertTo"]
+# json2png default parameters
+    output_type = 'summary'
+    with_nodes = False
+    resolution = "300"
+    size = "300x200"
+    limit = None
     if (convert_from == "json" and convert_to == "png"):
-        # json2png options
-        size = request.form["size"]
-        output_type = request.form["outputType"]
-        resolution = request.form["resolution"]
-        limit = request.form["limit"]
-        with_nodes = request.form["withNodes"]
+        # json2png custom options
+        if (request.form["size"] != ""):
+            size = request.form["size"]
+        if (request.form["outputType"] != ""):
+            output_type = request.form["outputType"]
+        if (request.form["resolution"] != ""):
+            resolution = request.form["resolution"]
+        if (request.form["limit"] != ""):
+            limit = request.form["limit"]
+        if (request.form["withNodes"] != ""):
+            with_nodes = request.form["withNodes"]
     upload_files = glob.glob('./uploads/*')
     for f in upload_files:
         os.remove(f)
@@ -64,7 +75,7 @@ def upload_file():
         }
         try:
             supported_from_to_conversions[convert_from][convert_to]
-        except KeyError:
+        except:
             print(f"{convert_from} to {convert_to} is not implemented")
 
         output_file = glob.glob('./uploads/*.' + convert_to)
