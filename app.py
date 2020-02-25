@@ -13,6 +13,12 @@ from converters.json2png import json2png
 app = Flask(__name__)
 app.config.from_object("settings.config.DevelopmentConfig")
 
+supported_from_to_conversions = {
+    "json": {
+        "png": "json2png(file_in)",
+        "glm": "json2glm(file_in)",
+    },
+}
 
 def allowed_file(filename):
     name, extension = os.path.splitext(filename)
@@ -49,15 +55,8 @@ def upload_file():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         file_in = glob.glob('./uploads/*.json')
-
-        supported_from_to_conversions = {
-            "json": {
-                "png": json2png(file_in),
-                "glm": json2glm(file_in),
-            },
-        }
         try:
-            supported_from_to_conversions[convert_from][convert_to]
+            exec(supported_from_to_conversions[convert_from][convert_to])
         except KeyError:
             print(f"{convert_from} to {convert_to} is not implemented")
 
