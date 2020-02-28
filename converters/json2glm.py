@@ -120,7 +120,8 @@ def schedules_glm(data, filename_out):
 	return True
 
 
-def json2glm(file_in):
+def json2glm(kwargs):
+	file_in = kwargs["file_in"]
 	filename_in = file_in[0]
 	filename_out = filename_in.replace("json", "glm")
 
@@ -139,7 +140,7 @@ def json2glm(file_in):
 
 	with open(filename_out, "a") as fw:
 		fw.write("// JSON to GLM Converter Output")
-        
+
 	clock_glm(data, filename_out)
 	modules_glm(data, filename_out)
 	globals_glm(data, filename_out)

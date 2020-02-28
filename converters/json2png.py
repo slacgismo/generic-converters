@@ -70,8 +70,13 @@ def profile(objects,root,pos=0):
 		plt.text(pos,min([va0,vb0,vc0]),"[%s]  "%root,color='grey',size=6,rotation=90,verticalalignment='top',horizontalalignment='center')
 
 
-def json2png(file_in, size, output_type, resolution, limit, with_nodes):
-
+def json2png(kwargs):
+	file_in = kwargs["file_in"]
+	size = kwargs["size"]
+	output_type = kwargs["output_type"]
+	resolution = kwargs["resolution"]
+	limit = kwargs["limit"]
+	with_nodes = kwargs["with_nodes"]
 	filename_json = file_in[0]
 	filename_png = filename_json.replace("json", "png")
 	basename = ''

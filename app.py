@@ -15,11 +15,11 @@ app.config.from_object("settings.config.DevelopmentConfig")
 
 supported_from_to_conversions = {
     "json": {
-        "png": "json2png(file_in, size, output_type, resolution, limit, with_nodes)",
-        "glm": "json2glm(file_in)",
+        "glm": json2glm,
+        "png": json2png,
     },
 }
-
+default_json2png = {'output_type': 'summary', 'with_nodes': False, 'resolution': '300', 'size': '300x200', 'limit': None}
 
 def allowed_file(filename):
     name, extension = os.path.splitext(filename)
@@ -39,35 +39,15 @@ def upload_form():
 
 @app.route('/', methods=['POST'])
 def upload_file():
-    requests = request.form.to_dict()
-    convert_from = requests["convertFrom"]
-    convert_to = requests["convertTo"]
+    dict_args = request.form.to_dict()
+    convert_from = dict_args["convertFrom"]
+    convert_to = dict_args["convertTo"]
+    # default values for json2png
+    defaults = dict(default_json2png)
 
-    # # json2png parameters
-    # output_type = requests.get('outputType', 'summary')
-    # with_nodes = requests.get('withNodes', False)
-    # resolution = requests.get('resolution', '300')
-    # size = requests.get('size', '300x200')
-    # limit = requests.get('limit', None)
-
-    # json2png default parameters
-    output_type = 'summary'
-    with_nodes = False
-    resolution = "300"
-    size = "300x200"
-    limit = None
-    if (convert_from == "json" and convert_to == "png"):
-        # json2png custom options
-        if (requests["size"] != ""):
-            size = requests["size"]
-        if (requests["outputType"] != ""):
-            output_type = requests["outputType"]
-        if (requests["resolution"] != ""):
-            resolution = requests["resolution"]
-        if (requests["limit"] != ""):
-            limit = requests["limit"]
-        if (requests["withNodes"] != ""):
-            with_nodes = requests["withNodes"]
+    for k, v in dict_args.items():
+        if (v == ""):
+            dict_args[k] = defaults.get(k)
 
     upload_files = glob.glob('./uploads/*')
     for f in upload_files:
@@ -84,8 +64,9 @@ def upload_file():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         file_in = glob.glob('./uploads/*.json')
+        dict_args['file_in'] = file_in
         try:
-            exec(supported_from_to_conversions[convert_from][convert_to])
+            supported_from_to_conversions[convert_from][convert_to](dict_args)
         except:
             print(f"{convert_from} to {convert_to} is not implemented")
 
