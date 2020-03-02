@@ -15,11 +15,16 @@ app.config.from_object("settings.config.DevelopmentConfig")
 
 supported_from_to_conversions = {
     "json": {
-        "glm": json2glm,
-        "png": json2png,
+        "glm": {
+            "function_handler": json2glm,
+            "defaults": {},
+        },
+        "png": {
+            "function_handler": json2png,
+            "defaults": {'output_type': 'summary', 'with_nodes': False, 'resolution': '300', 'size': '300x200', 'limit': None},
+        },
     },
 }
-default_json2png = {'output_type': 'summary', 'with_nodes': False, 'resolution': '300', 'size': '300x200', 'limit': None}
 
 def allowed_file(filename):
     name, extension = os.path.splitext(filename)
@@ -43,7 +48,7 @@ def upload_file():
     convert_from = dict_args["convertFrom"]
     convert_to = dict_args["convertTo"]
     # default values for json2png
-    defaults = dict(default_json2png)
+    defaults = dict(supported_from_to_conversions[convert_from][convert_to]["defaults"])
 
     for k, v in dict_args.items():
         if (v == ""):
@@ -66,10 +71,10 @@ def upload_file():
         file_in = glob.glob('./uploads/*.json')
         dict_args['file_in'] = file_in
         try:
-            supported_from_to_conversions[convert_from][convert_to](dict_args)
+            supported_from_to_conversions[convert_from][convert_to]["function_handler"](dict_args)
         except:
-            print(f"{convert_from} to {convert_to} is not implemented")
-
+            flash('Conversion failed')
+            return redirect('/convert')
         output_file = glob.glob('./uploads/*.' + convert_to)
         output_file = output_file[0].split("/")[-1:][0]
 
