@@ -127,4 +127,4 @@ def json2png(kwargs):
 			argv[0] = modname
 			mod.main(argv)
 		else:
-			raise Exception("type '%s' is not valid" % output_type)
+			raise TypeError("type '%s' is not valid" % output_type)

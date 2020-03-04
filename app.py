@@ -47,7 +47,7 @@ def upload_file():
     dict_args = request.form.to_dict()
     convert_from = dict_args["convertFrom"]
     convert_to = dict_args["convertTo"]
-    # default values for json2png
+    # default values for any converter
     defaults = dict(supported_from_to_conversions[convert_from][convert_to]["defaults"])
 
     for k, v in dict_args.items():
