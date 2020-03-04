@@ -32,6 +32,18 @@ def allowed_file(filename):
     return extension in app.config['ALLOWED_EXTENSIONS']
 
 
+def dumper(obj):
+    try:
+        return obj.toJSON()
+    except:
+        return obj.__dict__
+
+
+jsonn = json.dumps(supported_from_to_conversions, default=dumper, indent=2)
+with open('./static/js/data.json', 'w') as json_file:
+    json.dump(jsonn, json_file)
+
+
 @app.route('/')
 def index():
     return render_template('home.html')
@@ -45,8 +57,8 @@ def upload_form():
 @app.route('/', methods=['POST'])
 def upload_file():
     dict_args = request.form.to_dict()
-    convert_from = dict_args["convertFrom"]
-    convert_to = dict_args["convertTo"]
+    convert_from = dict_args["convert-from"]
+    convert_to = dict_args["convert-to"]
     # default values for json2png
     defaults = dict(supported_from_to_conversions[convert_from][convert_to]["defaults"])
 

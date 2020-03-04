@@ -1,0 +1,1 @@
+"{\n  \"json\": {\n    \"glm\": {\n      \"function_handler\": {},\n      \"defaults\": {}\n    },\n    \"png\": {\n      \"function_handler\": {},\n      \"defaults\": {\n        \"output_type\": \"summary\",\n        \"with_nodes\": false,\n        \"resolution\": \"300\",\n        \"size\": \"300x200\",\n        \"limit\": null\n      }\n    }\n  }\n}"
