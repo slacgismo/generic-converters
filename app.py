@@ -72,8 +72,8 @@ def upload_file():
         dict_args['file_in'] = file_in
         try:
             supported_from_to_conversions[convert_from][convert_to]["function_handler"](dict_args)
-        except:
-            flash('Conversion failed')
+        except KeyError:
+            print(f'{convert_from} to {convert_to} converter is not available.')
             return redirect('/convert')
         output_file = glob.glob('./uploads/*.' + convert_to)
         output_file = output_file[0].split("/")[-1:][0]
