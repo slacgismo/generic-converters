@@ -48,7 +48,12 @@ def upload_file():
     convert_from = dict_args["convertFrom"]
     convert_to = dict_args["convertTo"]
     # default values for any converter
-    defaults = dict(supported_from_to_conversions[convert_from][convert_to]["defaults"])
+    try:
+        defaults = dict(supported_from_to_conversions[convert_from][convert_to]["defaults"])
+    except KeyError:
+        flash(f'{convert_from} to {convert_to} converter is not available.')
+        print(f'{convert_from} to {convert_to} converter is not available.')
+        return redirect('/convert')
 
     for k, v in dict_args.items():
         if (v == ""):
@@ -73,6 +78,7 @@ def upload_file():
         try:
             supported_from_to_conversions[convert_from][convert_to]["function_handler"](dict_args)
         except KeyError:
+            flash(f'{convert_from} to {convert_to} converter is not available.')
             print(f'{convert_from} to {convert_to} converter is not available.')
             return redirect('/convert')
         output_file = glob.glob('./uploads/*.' + convert_to)
