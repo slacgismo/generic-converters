@@ -14,20 +14,23 @@
 			</div>
 
 			<div class="form-group">
-				<select class="custom-select" name="convertFrom">
+				<select class="custom-select" name="convertFrom" required>
 				  <option value="" disabled selected hidden>Convert From</option>
 				  <option value="json">JSON</option>
 				</select>
 			</div>
 
 			<div class="form-group">
-				<select class="custom-select" name="convertTo">
+				<select class="custom-select" id="convertTo" name="convertTo" required>
 				  <option value="" disabled selected hidden>Convert To</option>
 				  <option value="glm">GLM</option>
-				  <option value="txt">TXT</option>
 				  <option value="png">PNG</option>
 				</select>
 			</div>
+
+			<div class="form-group" id="json2png">
+			</div>
+
 			<div class="invalid-feedback">Example invalid custom select feedback</div>
 	    </dl>
 	    <p>

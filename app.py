@@ -8,27 +8,57 @@ import glob
 from flask import Flask, flash, request, redirect, render_template, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 from converters.json2glm import json2glm
+from converters.json2png import json2png
 
 app = Flask(__name__)
 app.config.from_object("settings.config.DevelopmentConfig")
+
+supported_from_to_conversions = {
+    "json": {
+        "glm": {
+            "function_handler": json2glm,
+            "defaults": {},
+        },
+        "png": {
+            "function_handler": json2png,
+            "defaults": {'output_type': 'summary', 'with_nodes': False, 'resolution': '300', 'size': '300x200', 'limit': None},
+        },
+    },
+}
 
 def allowed_file(filename):
     name, extension = os.path.splitext(filename)
     extension = extension[1:].lower()
     return extension in app.config['ALLOWED_EXTENSIONS']
 
+
 @app.route('/')
 def index():
     return render_template('home.html')
+
 
 @app.route('/convert')
 def upload_form():
     return render_template('convert.html')
 
+
 @app.route('/', methods=['POST'])
 def upload_file():
-    convert_from = request.form["convertFrom"]
-    convert_to = request.form["convertTo"]
+    dict_args = request.form.to_dict()
+    convert_from = dict_args["convertFrom"]
+    convert_to = dict_args["convertTo"]
+    # default values for any converter
+    try:
+        defaults = dict(supported_from_to_conversions[convert_from][convert_to]["defaults"])
+    except KeyError:
+        flash(f'{convert_from} to {convert_to} converter is not available.')
+        print(f'{convert_from} to {convert_to} converter is not available.')
+        return redirect('/convert')
+
+    for k, v in dict_args.items():
+        if (v == ""):
+            dict_args[k] = defaults.get(k)
+
     upload_files = glob.glob('./uploads/*')
     for f in upload_files:
         os.remove(f)
@@ -44,16 +74,21 @@ def upload_file():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         file_in = glob.glob('./uploads/*.json')
-        if (convert_from == "json" and convert_to == "png"):
-            os.system('python ./converters/' + convert_from + '2' + convert_to + '.py -i ' + file_in[0])
-        else:
-            json2glm()
+        dict_args['file_in'] = file_in
+        try:
+            supported_from_to_conversions[convert_from][convert_to]["function_handler"](dict_args)
+        except KeyError:
+            flash(f'{convert_from} to {convert_to} converter is not available.')
+            print(f'{convert_from} to {convert_to} converter is not available.')
+            return redirect('/convert')
         output_file = glob.glob('./uploads/*.' + convert_to)
         output_file = output_file[0].split("/")[-1:][0]
-        return redirect(url_for('download', filename = output_file))
+
+        return redirect(url_for('download', filename=output_file))
     else:
         flash('Allowed file types are json')
         return redirect('/convert')
+
 
 @app.route('/convert/<path:filename>', methods=['GET', 'POST'])
 def download(filename):
