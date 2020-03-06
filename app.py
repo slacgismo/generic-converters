@@ -5,7 +5,7 @@ import sys
 import getopt
 import shutil
 import glob
-from flask import Flask, flash, request, redirect, render_template, url_for, send_from_directory
+from flask import Flask, flash, request, redirect, render_template, url_for, send_from_directory, g
 from werkzeug.utils import secure_filename
 from converters.json2glm import json2glm
 from converters.json2png import json2png
@@ -26,22 +26,15 @@ supported_from_to_conversions = {
     },
 }
 
+@app.context_processor
+def all_templates():
+    return dict(fromToConversion=supported_from_to_conversions)
+
+
 def allowed_file(filename):
     name, extension = os.path.splitext(filename)
     extension = extension[1:].lower()
     return extension in app.config['ALLOWED_EXTENSIONS']
-
-
-def dumper(obj):
-    try:
-        return obj.toJSON()
-    except:
-        return obj.__dict__
-
-
-jsonn = json.dumps(supported_from_to_conversions, default=dumper, indent=2)
-with open('./static/js/data.json', 'w') as json_file:
-    json.dump(jsonn, json_file)
 
 
 @app.route('/')
