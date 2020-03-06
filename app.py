@@ -26,15 +26,16 @@ supported_from_to_conversions = {
     },
 }
 
-@app.context_processor
-def all_templates():
-    return dict(fromToConversion=supported_from_to_conversions)
-
 
 def allowed_file(filename):
     name, extension = os.path.splitext(filename)
     extension = extension[1:].lower()
     return extension in app.config['ALLOWED_EXTENSIONS']
+
+
+@app.context_processor
+def all_templates():
+    return dict(fromToConversion=supported_from_to_conversions)
 
 
 @app.route('/')
@@ -52,8 +53,13 @@ def upload_file():
     dict_args = request.form.to_dict()
     convert_from = dict_args["convert-from"]
     convert_to = dict_args["convert-to"]
-    # default values for json2png
-    defaults = dict(supported_from_to_conversions[convert_from][convert_to]["defaults"])
+    # default values for any converter
+    try:
+        defaults = dict(supported_from_to_conversions[convert_from][convert_to]["defaults"])
+    except KeyError:
+        flash(f'{convert_from} to {convert_to} converter is not available.')
+        print(f'{convert_from} to {convert_to} converter is not available.')
+        return redirect('/convert')
 
     for k, v in dict_args.items():
         if (v == ""):
@@ -77,8 +83,9 @@ def upload_file():
         dict_args['file_in'] = file_in
         try:
             supported_from_to_conversions[convert_from][convert_to]["function_handler"](dict_args)
-        except:
-            flash('Conversion failed')
+        except KeyError:
+            flash(f'{convert_from} to {convert_to} converter is not available.')
+            print(f'{convert_from} to {convert_to} converter is not available.')
             return redirect('/convert')
         output_file = glob.glob('./uploads/*.' + convert_to)
         output_file = output_file[0].split("/")[-1:][0]
