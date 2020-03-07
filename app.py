@@ -26,7 +26,6 @@ supported_from_to_conversions = {
     },
 }
 
-
 def allowed_file(filename):
     name, extension = os.path.splitext(filename)
     extension = extension[1:].lower()
