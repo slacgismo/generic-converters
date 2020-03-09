@@ -1,26 +1,21 @@
-var json2pngOptions = '<input class="form-control" name="size" placeholder="Image Size In Pixels (OPTIONAL)">';
-json2pngOptions += '<input class="form-control" name="output_type" placeholder="Output Type (OPTIONAL)">';
-json2pngOptions += '<input class="form-control" name="resolution" placeholder="Image Resolution in Dots Per Inch (OPTIONAL)">';
-json2pngOptions += '<input class="form-control" name="limit" placeholder="Voltage Range Limit in Percent (OPTIONAL)">';
-json2pngOptions += '<input class="form-control" name="with_nodes" placeholder="Label Branching Nodes (OPTIONAL)">';
-
-
 $(document).ready(function(){
-	// for if png is already selected when page loads
-	var convertTo = $("#convertTo").val();
-	if (convertTo == "png"){
-		$("#json2png").html(json2pngOptions);
-	}
-	else {
-		$("#json2png").html("");
-	}
-	$("#convertTo").change(function(){
-		convertTo = $("#convertTo").val();
-		if (convertTo == "png"){
-			$("#json2png").html(json2pngOptions);
+	fromToConversion = fromToConversion.replace(/'/g,'"');
+	fromToConversion = fromToConversion.replace(/<.*?>/g, "null")
+	fromToConversion = fromToConversion.replace("False", "false")
+	fromToConversion = fromToConversion.replace("True", "true")
+	fromToConversion = fromToConversion.replace("None", "null")
+	var conversionDict = JSON.parse(fromToConversion);
+
+	var convertTo = $("#convert-to").val();
+	var convertFrom = $("#convert-from").val();
+	$("#convert-to, #convert-from").change(function(){
+		convertTo = $("#convert-to").val();
+		convertFrom = $("#convert-from").val();
+		conversionOptions = Object.keys(conversionDict[convertFrom][convertTo]["defaults"])
+		var optionsStr = ""
+		for (var i = 0; i < conversionOptions.length; i++){
+			optionsStr += '<input class="form-control" name="' + conversionOptions[i] + '"placeholder="' + conversionOptions[i] +'(OPTIONAL)">'
 		}
-		else {
-			$("#json2png").html("");
-		}
+		$("#conversion-options").html(optionsStr);
 	});
 });

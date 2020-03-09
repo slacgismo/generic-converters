@@ -5,7 +5,7 @@ import sys
 import getopt
 import shutil
 import glob
-from flask import Flask, flash, request, redirect, render_template, url_for, send_from_directory
+from flask import Flask, flash, request, redirect, render_template, url_for, send_from_directory, g
 from werkzeug.utils import secure_filename
 from converters.json2glm import json2glm
 from converters.json2png import json2png
@@ -32,6 +32,11 @@ def allowed_file(filename):
     return extension in app.config['ALLOWED_EXTENSIONS']
 
 
+@app.context_processor
+def all_templates():
+    return dict(fromToConversion=supported_from_to_conversions)
+
+
 @app.route('/')
 def index():
     return render_template('home.html')
@@ -45,8 +50,8 @@ def upload_form():
 @app.route('/', methods=['POST'])
 def upload_file():
     dict_args = request.form.to_dict()
-    convert_from = dict_args["convertFrom"]
-    convert_to = dict_args["convertTo"]
+    convert_from = dict_args["convert-from"]
+    convert_to = dict_args["convert-to"]
     # default values for any converter
     try:
         defaults = dict(supported_from_to_conversions[convert_from][convert_to]["defaults"])

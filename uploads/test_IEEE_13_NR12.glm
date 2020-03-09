@@ -1,0 +1,649 @@
+// JSON to GLM Converter Output
+ // CLOCK
+clock {
+	timezone EST5EDT;
+	starttime "2000-01-01 00:00:00 EST";
+	stoptime "2000-01-01 00:00:01 EST";
+}
+ // MODULES
+module powerflow{
+	message_flags DEBUG|VERBOSE;
+	show_matrix_values FALSE;
+	primary_voltage_ratio +60;
+	nominal_frequency +60;
+	require_voltage_control FALSE;
+	geographic_degree +3.21944;
+	fault_impedance +1e-06+0j;
+	ground_impedance +1e-06+0j;
+	warning_underfrequency +55;
+	warning_overfrequency +65;
+	warning_undervoltage +0.8;
+	warning_overvoltage +1.2;
+	warning_voltageangle +2;
+	maximum_voltage_error +1e-06;
+	solver_method NR;
+	NR_matrix_output_interval NEVER;
+	NR_matrix_output_references FALSE;
+	line_capacitance TRUE;
+	line_limits TRUE;
+	NR_iteration_limit 500;
+	NR_deltamode_iteration_limit 10;
+	NR_superLU_procs 1;
+	default_maximum_voltage_error +1e-06;
+	default_maximum_power_error +0.0001;
+	NR_admit_change FALSE;
+	enable_subsecond_models FALSE;
+	all_powerflow_delta FALSE;
+	deltamode_timestep +1e+07 ns;
+	current_frequency +60 Hz;
+	master_frequency_update FALSE;
+	enable_frequency_dependence FALSE;
+	default_resistance +0.0001;
+	enable_inrush FALSE;
+	low_voltage_impedance_level +0.7;
+	enable_mesh_fault_current FALSE;
+	convergence_error_handling FATAL;
+	solver_profile_enable FALSE;
+	solver_profile_filename solver_nr_profile.csv;
+	solver_profile_headers_included TRUE;
+	solver_headers timestamp,duration[microsec],iteration,bus_count,branch_count,error;
+	solver_ml_config /usr/local/share/gridlabd/solver_ml.conf;
+	market_price_name current_market.clearing_price;
+}
+module assert{
+	message_flags DEBUG|VERBOSE;
+}
+ // GLOBALS
+// version.major is set to 4
+// version.minor is set to 2
+// version.patch is set to 1
+// version.build is set to 191231
+// version.branch is set to develop-change-license
+// command_line is set to /usr/local/opt/gridlabd/4.2.1-200104-develop/bin/gridlabd.bin test_IEEE_13_NR.glm -o test_IEEE_13_NR.json
+#ifndef environment
+global char1024 environment "batch";
+#else
+#set environment="batch"
+#endif //environment
+#ifndef quiet
+global bool quiet FALSE;
+#else
+#set quiet=FALSE
+#endif //quiet
+#ifndef warn
+global bool warn TRUE;
+#else
+#set warn=TRUE
+#endif //warn
+#ifndef debugger
+global bool debugger FALSE;
+#else
+#set debugger=FALSE
+#endif //debugger
+#ifndef gdb
+global bool gdb FALSE;
+#else
+#set gdb=FALSE
+#endif //gdb
+#ifndef debug
+global bool debug FALSE;
+#else
+#set debug=FALSE
+#endif //debug
+#ifndef test
+global bool test FALSE;
+#else
+#set test=FALSE
+#endif //test
+#ifndef verbose
+global bool verbose FALSE;
+#else
+#set verbose=FALSE
+#endif //verbose
+#ifndef iteration_limit
+global int32 iteration_limit 100000;
+#else
+#set iteration_limit=100000
+#endif //iteration_limit
+// workdir is set to /Users/alyona_slac/gridlabd/slacgismo_gridlabd/powerflow/autotest/test_IEEE_13_NR
+#ifndef dumpfile
+global char1024 dumpfile "gridlabd.json";
+#else
+#set dumpfile="gridlabd.json"
+#endif //dumpfile
+#ifndef savefile
+global char1024 savefile "test_IEEE_13_NR.json";
+#else
+#set savefile="test_IEEE_13_NR.json"
+#endif //savefile
+#ifndef dumpall
+global bool dumpall FALSE;
+#else
+#set dumpall=FALSE
+#endif //dumpall
+#ifndef runchecks
+global bool runchecks FALSE;
+#else
+#set runchecks=FALSE
+#endif //runchecks
+#ifndef threadcount
+global int32 threadcount 1;
+#else
+#set threadcount=1
+#endif //threadcount
+#ifndef profiler
+global bool profiler FALSE;
+#else
+#set profiler=FALSE
+#endif //profiler
+#ifndef pauseatexit
+global bool pauseatexit FALSE;
+#else
+#set pauseatexit=FALSE
+#endif //pauseatexit
+#ifndef testoutputfile
+global char1024 testoutputfile "test.txt";
+#else
+#set testoutputfile="test.txt"
+#endif //testoutputfile
+#ifndef xml_encoding
+global int32 xml_encoding 8;
+#else
+#set xml_encoding=8
+#endif //xml_encoding
+#ifndef clock
+global timestamp clock "2000-01-01 00:00:00 EST";
+#else
+#set clock="2000-01-01 00:00:00 EST"
+#endif //clock
+#ifndef starttime
+global timestamp starttime "2000-01-01 00:00:00 EST";
+#else
+#set starttime="2000-01-01 00:00:00 EST"
+#endif //starttime
+#ifndef stoptime
+global timestamp stoptime "2000-01-01 00:00:01 EST";
+#else
+#set stoptime="2000-01-01 00:00:01 EST"
+#endif //stoptime
+#ifndef double_format
+global char32 double_format "%+lg";
+#else
+#set double_format="%+lg"
+#endif //double_format
+#ifndef complex_format
+global char256 complex_format "%+lg%+lg%c";
+#else
+#set complex_format="%+lg%+lg%c"
+#endif //complex_format
+#ifndef object_format
+global char32 object_format "%s:%d";
+#else
+#set object_format="%s:%d"
+#endif //object_format
+#ifndef object_scan
+global char32 object_scan "%[^:]:%d";
+#else
+#set object_scan="%[^:]:%d"
+#endif //object_scan
+#ifndef object_tree_balance
+global bool object_tree_balance FALSE;
+#else
+#set object_tree_balance=FALSE
+#endif //object_tree_balance
+// kmlfile is set to 
+#ifndef kmlhost
+global char1024 kmlhost "https://raw.githubusercontent.com/dchassin/gridlabd/master/gldcore/rt";
+#else
+#set kmlhost="https://raw.githubusercontent.com/dchassin/gridlabd/master/gldcore/rt"
+#endif //kmlhost
+// modelname is set to test_IEEE_13_NR.glm
+// execdir is set to /usr/local/opt/gridlabd/4.2.1-200104-develop/bin
+#ifndef strictnames
+global bool strictnames TRUE;
+#else
+#set strictnames=TRUE
+#endif //strictnames
+#ifndef website
+global char1024 website "http://www.gridlabd.org/";
+#else
+#set website="http://www.gridlabd.org/"
+#endif //website
+#ifndef urlbase
+global char1024 urlbase "http://www.gridlabd.org/";
+#else
+#set urlbase="http://www.gridlabd.org/"
+#endif //urlbase
+#ifndef randomseed
+global int32 randomseed 1897958302;
+#else
+#set randomseed=1897958302
+#endif //randomseed
+#ifndef randomstate
+global int32 randomstate 1897958302;
+#else
+#set randomstate=1897958302
+#endif //randomstate
+// include is set to 
+// trace is set to 
+#ifndef gdb_window
+global bool gdb_window FALSE;
+#else
+#set gdb_window=FALSE
+#endif //gdb_window
+#ifndef tmp
+global char1024 tmp "/Users/alyona_slac/.gridlabd/tmp";
+#else
+#set tmp="/Users/alyona_slac/.gridlabd/tmp"
+#endif //tmp
+#ifndef force_compile
+global int32 force_compile 0;
+#else
+#set force_compile=0
+#endif //force_compile
+#ifndef nolocks
+global bool nolocks FALSE;
+#else
+#set nolocks=FALSE
+#endif //nolocks
+#ifndef skipsafe
+global bool skipsafe FALSE;
+#else
+#set skipsafe=FALSE
+#endif //skipsafe
+#ifndef dateformat
+global enumeration dateformat ISO;
+#else
+#set dateformat=ISO
+#endif //dateformat
+#ifndef init_sequence
+global enumeration init_sequence DEFERRED;
+#else
+#set init_sequence=DEFERRED
+#endif //init_sequence
+#ifndef minimum_timestep
+global int32 minimum_timestep 1;
+#else
+#set minimum_timestep=1
+#endif //minimum_timestep
+// platform is set to MACOSX
+#ifndef suppress_repeat_messages
+global bool suppress_repeat_messages TRUE;
+#else
+#set suppress_repeat_messages=TRUE
+#endif //suppress_repeat_messages
+#ifndef maximum_synctime
+global int32 maximum_synctime 60;
+#else
+#set maximum_synctime=60
+#endif //maximum_synctime
+#ifndef run_realtime
+global bool run_realtime FALSE;
+#else
+#set run_realtime=FALSE
+#endif //run_realtime
+#ifndef enter_realtime
+global timestamp enter_realtime "NEVER";
+#else
+#set enter_realtime="NEVER"
+#endif //enter_realtime
+// realtime_metric is set to +0
+#ifndef no_deprecate
+global bool no_deprecate FALSE;
+#else
+#set no_deprecate=FALSE
+#endif //no_deprecate
+// streaming_io is set to FALSE
+// compileonly is set to FALSE
+#ifndef relax_naming_rules
+global bool relax_naming_rules FALSE;
+#else
+#set relax_naming_rules=FALSE
+#endif //relax_naming_rules
+#ifndef browser
+global char1024 browser "safari";
+#else
+#set browser="safari"
+#endif //browser
+#ifndef server_portnum
+global int32 server_portnum 0;
+#else
+#set server_portnum=0
+#endif //server_portnum
+#ifndef server_quit_on_close
+global bool server_quit_on_close FALSE;
+#else
+#set server_quit_on_close=FALSE
+#endif //server_quit_on_close
+// client_allowed is set to 
+#ifndef autoclean
+global bool autoclean TRUE;
+#else
+#set autoclean=TRUE
+#endif //autoclean
+#ifndef technology_readiness_level
+global enumeration technology_readiness_level UNKNOWN;
+#else
+#set technology_readiness_level=UNKNOWN
+#endif //technology_readiness_level
+#ifndef show_progress
+global bool show_progress TRUE;
+#else
+#set show_progress=TRUE
+#endif //show_progress
+#ifndef checkpoint_type
+global enumeration checkpoint_type NONE;
+#else
+#set checkpoint_type=NONE
+#endif //checkpoint_type
+// checkpoint_file is set to 
+#ifndef checkpoint_seqnum
+global int32 checkpoint_seqnum 0;
+#else
+#set checkpoint_seqnum=0
+#endif //checkpoint_seqnum
+#ifndef checkpoint_interval
+global int32 checkpoint_interval 0;
+#else
+#set checkpoint_interval=0
+#endif //checkpoint_interval
+#ifndef checkpoint_keepall
+global bool checkpoint_keepall FALSE;
+#else
+#set checkpoint_keepall=FALSE
+#endif //checkpoint_keepall
+#ifndef check_version
+global bool check_version FALSE;
+#else
+#set check_version=FALSE
+#endif //check_version
+#ifndef random_number_generator
+global enumeration random_number_generator RNG3;
+#else
+#set random_number_generator=RNG3
+#endif //random_number_generator
+#ifndef mainloop_state
+global enumeration mainloop_state DONE;
+#else
+#set mainloop_state=DONE
+#endif //mainloop_state
+#ifndef pauseat
+global timestamp pauseat "NEVER";
+#else
+#set pauseat="NEVER"
+#endif //pauseat
+// infourl is set to http://gridlab-d.shoutwiki.com/w/index.php?title=Special%3ASearch&fulltext=Search&search=
+#ifndef hostname
+global char1024 hostname "localhost";
+#else
+#set hostname="localhost"
+#endif //hostname
+#ifndef hostaddr
+global char32 hostaddr "127.0.0.1";
+#else
+#set hostaddr="127.0.0.1"
+#endif //hostaddr
+#ifndef autostart_gui
+global bool autostart_gui TRUE;
+#else
+#set autostart_gui=TRUE
+#endif //autostart_gui
+// master is set to 
+#ifndef master_port
+global int64 master_port 0;
+#else
+#set master_port=0
+#endif //master_port
+#ifndef multirun_mode
+global enumeration multirun_mode STANDALONE;
+#else
+#set multirun_mode=STANDALONE
+#endif //multirun_mode
+#ifndef multirun_conn
+global enumeration multirun_conn NONE;
+#else
+#set multirun_conn=NONE
+#endif //multirun_conn
+#ifndef signal_timeout
+global int32 signal_timeout 5000;
+#else
+#set signal_timeout=5000
+#endif //signal_timeout
+#ifndef slave_port
+global int16 slave_port 6267;
+#else
+#set slave_port=6267
+#endif //slave_port
+#ifndef slave_id
+global int64 slave_id 0;
+#else
+#set slave_id=0
+#endif //slave_id
+// return_code is set to 0
+// exit_code is set to 0
+#ifndef module_compiler_flags
+global set module_compiler_flags NONE;
+#else
+#set module_compiler_flags=NONE
+#endif //module_compiler_flags
+// init_max_defer is set to 64
+#ifndef mt_analysis
+global bool mt_analysis FALSE;
+#else
+#set mt_analysis=FALSE
+#endif //mt_analysis
+#ifndef inline_block_size
+global int32 inline_block_size 1048576;
+#else
+#set inline_block_size=1048576
+#endif //inline_block_size
+#ifndef validate
+global set validate TSTD|RALL;
+#else
+#set validate=TSTD|RALL
+#endif //validate
+#ifndef sanitize
+global set sanitize NAMES|POSITIONS;
+#else
+#set sanitize=NAMES|POSITIONS
+#endif //sanitize
+#ifndef sanitize_prefix
+global char8 sanitize_prefix "GLD_";
+#else
+#set sanitize_prefix="GLD_"
+#endif //sanitize_prefix
+#ifndef sanitize_index
+global char1024 sanitize_index ".txt";
+#else
+#set sanitize_index=".txt"
+#endif //sanitize_index
+// sanitize_offset is set to 
+#ifndef simulation_mode
+global enumeration simulation_mode EVENT;
+#else
+#set simulation_mode=EVENT
+#endif //simulation_mode
+#ifndef deltamode_allowed
+global bool deltamode_allowed FALSE;
+#else
+#set deltamode_allowed=FALSE
+#endif //deltamode_allowed
+#ifndef deltamode_timestep
+global int32 deltamode_timestep 10000000;
+#else
+#set deltamode_timestep=10000000
+#endif //deltamode_timestep
+#ifndef deltamode_maximumtime
+global int64 deltamode_maximumtime 3600000000000;
+#else
+#set deltamode_maximumtime=3600000000000
+#endif //deltamode_maximumtime
+#ifndef deltaclock
+global int64 deltaclock 0;
+#else
+#set deltaclock=0
+#endif //deltaclock
+#ifndef delta_current_clock
+global double delta_current_clock +0;
+#else
+#set delta_current_clock=+0
+#endif //delta_current_clock
+// deltamode_updateorder is set to powerflow
+#ifndef deltamode_iteration_limit
+global int32 deltamode_iteration_limit 10;
+#else
+#set deltamode_iteration_limit=10
+#endif //deltamode_iteration_limit
+#ifndef deltamode_forced_extra_timesteps
+global int32 deltamode_forced_extra_timesteps 0;
+#else
+#set deltamode_forced_extra_timesteps=0
+#endif //deltamode_forced_extra_timesteps
+#ifndef deltamode_forced_always
+global bool deltamode_forced_always FALSE;
+#else
+#set deltamode_forced_always=FALSE
+#endif //deltamode_forced_always
+#ifndef run_powerworld
+global bool run_powerworld FALSE;
+#else
+#set run_powerworld=FALSE
+#endif //run_powerworld
+#ifndef bigranks
+global bool bigranks TRUE;
+#else
+#set bigranks=TRUE
+#endif //bigranks
+// exename is set to /usr/local/opt/gridlabd/4.2.1-200104-develop/bin/gridlabd.bin
+#ifndef wget_options
+global char1024 wget_options "maxsize:100MB;update:newer";
+#else
+#set wget_options="maxsize:100MB;update:newer"
+#endif //wget_options
+#ifndef curl_options
+global char1024 curl_options "maxsize:100MB;update:newer";
+#else
+#set curl_options="maxsize:100MB;update:newer"
+#endif //curl_options
+#ifndef svnroot
+global char1024 svnroot "http://gridlab-d.svn.sourceforge.net/svnroot/gridlab-d";
+#else
+#set svnroot="http://gridlab-d.svn.sourceforge.net/svnroot/gridlab-d"
+#endif //svnroot
+#ifndef github
+global char1024 github "https://github.com/gridlab-d";
+#else
+#set github="https://github.com/gridlab-d"
+#endif //github
+#ifndef gitraw
+global char1024 gitraw "https://raw.githubusercontent.com/gridlab-d";
+#else
+#set gitraw="https://raw.githubusercontent.com/gridlab-d"
+#endif //gitraw
+#ifndef allow_reinclude
+global bool allow_reinclude FALSE;
+#else
+#set allow_reinclude=FALSE
+#endif //allow_reinclude
+#ifndef output_message_context
+global set output_message_context ALL;
+#else
+#set output_message_context=ALL
+#endif //output_message_context
+#ifndef permissive_access
+global int32 permissive_access 0;
+#else
+#set permissive_access=0
+#endif //permissive_access
+#ifndef relax_undefined_if
+global bool relax_undefined_if FALSE;
+#else
+#set relax_undefined_if=FALSE
+#endif //relax_undefined_if
+#ifndef literal_if
+global bool literal_if TRUE;
+#else
+#set literal_if=TRUE
+#endif //literal_if
+#ifndef validto_context
+global enumeration validto_context 1414743296;
+#else
+#set validto_context=1414743296
+#endif //validto_context
+#ifndef daemon_configfile
+global char1024 daemon_configfile "gridlabd.cnf";
+#else
+#set daemon_configfile="gridlabd.cnf"
+#endif //daemon_configfile
+// timezone_locale is set to EST5EDT
+#ifndef glm_save_options
+global set glm_save_options LEGACY;
+#else
+#set glm_save_options=LEGACY
+#endif //glm_save_options
+#ifndef filesave_options
+global set filesave_options ALL;
+#else
+#set filesave_options=ALL
+#endif //filesave_options
+#ifndef ignore_errors
+global bool ignore_errors FALSE;
+#else
+#set ignore_errors=FALSE
+#endif //ignore_errors
+// powerflow::message_flags is set to DEBUG|VERBOSE
+// powerflow::show_matrix_values is set to FALSE
+// powerflow::primary_voltage_ratio is set to +60
+// powerflow::nominal_frequency is set to +60
+// powerflow::require_voltage_control is set to FALSE
+// powerflow::geographic_degree is set to +3.21944
+// powerflow::fault_impedance is set to +1e-06+0j
+// powerflow::ground_impedance is set to +1e-06+0j
+// powerflow::warning_underfrequency is set to +55
+// powerflow::warning_overfrequency is set to +65
+// powerflow::warning_undervoltage is set to +0.8
+// powerflow::warning_overvoltage is set to +1.2
+// powerflow::warning_voltageangle is set to +2
+// powerflow::maximum_voltage_error is set to +1e-06
+// powerflow::solver_method is set to NR
+// powerflow::NR_matrix_file is set to 
+// powerflow::NR_matrix_output_interval is set to NEVER
+// powerflow::NR_matrix_output_references is set to FALSE
+// powerflow::line_capacitance is set to TRUE
+// powerflow::line_limits is set to TRUE
+// powerflow::lu_solver is set to 
+// powerflow::NR_iteration_limit is set to 500
+// powerflow::NR_deltamode_iteration_limit is set to 10
+// powerflow::NR_superLU_procs is set to 1
+// powerflow::default_maximum_voltage_error is set to +1e-06
+// powerflow::default_maximum_power_error is set to +0.0001
+// powerflow::NR_admit_change is set to FALSE
+// powerflow::enable_subsecond_models is set to FALSE
+// powerflow::all_powerflow_delta is set to FALSE
+// powerflow::deltamode_timestep is set to +1e+07 ns
+// powerflow::current_frequency is set to +60 Hz
+// powerflow::master_frequency_update is set to FALSE
+// powerflow::enable_frequency_dependence is set to FALSE
+// powerflow::default_resistance is set to +0.0001
+// powerflow::enable_inrush is set to FALSE
+// powerflow::low_voltage_impedance_level is set to +0.7
+// powerflow::enable_mesh_fault_current is set to FALSE
+// powerflow::convergence_error_handling is set to FATAL
+// powerflow::solver_profile_enable is set to FALSE
+// powerflow::solver_profile_filename is set to solver_nr_profile.csv
+// powerflow::solver_profile_headers_included is set to TRUE
+// powerflow::solver_headers is set to timestamp,duration[microsec],iteration,bus_count,branch_count,error
+// powerflow::solver_ml_config is set to /usr/local/share/gridlabd/solver_ml.conf
+// powerflow::market_price_name is set to current_market.clearing_price
+// pole::repair_time is set to +24 h
+#ifndef climate_impact_zone
+global enumeration climate_impact_zone NONE;
+#else
+#set climate_impact_zone=NONE
+#endif //climate_impact_zone
+// assert::message_flags is set to DEBUG|VERBOSE
+ // CLASSES
+ // SCHEDULES
+ // OBJECTS
+object overhead_line_conductor{
+	name "olc6010";
